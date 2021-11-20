@@ -1,6 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\Finder\SplFileInfo;
+use Illuminate\Support\Str;
+use Symfony\Component\Process\Process;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,10 +17,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', \App\Http\Controllers\PrettyDisplayAllFilesController::class);
 
-Route::get('{script:slug}', fn(\App\Models\Script $script) => response($script->contents, '200', [
-    'content-type' => 'text/text',
-]));
+Route::post('.github/webhook', App\Http\Controllers\GithubWebhooksController::class);
+
+Route::get('{package}@{distro}:{version?}', App\Http\Controllers\ScriptController::class);
+
+Route::get('{package}/logo.svg', App\Http\Controllers\LogoController::class);
