@@ -2,21 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+Route::get('/', App\Http\Controllers\PrettyDisplayAllFilesController::class);
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::post('.github/webhook', App\Http\Controllers\GithubWebhooksController::class);
 
-Route::get('{script:slug}', fn(\App\Models\Script $script) => response($script->contents, '200', [
-    'content-type' => 'text/text',
-]));
+Route::get('{package}@{distro}:{version?}', App\Http\Controllers\ScriptController::class);
+
+Route::get('{package}/logo.svg', App\Http\Controllers\LogoController::class);
