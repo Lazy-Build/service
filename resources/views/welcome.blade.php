@@ -10,12 +10,13 @@
 
         <script defer src="{{ mix('/js/app.js') }}"></script>
         <script>
-            function handler(value, wasCopied) {
+            function handler({ version, distro }, wasCopied) {
+                console.log(arguments)
                 // 1) Add the text to the DOM (usually achieved with a hidden input field)
                 const input = document.createElement('input');
                 document.body.appendChild(input);
-                input.value = 'curl https://lazy.build/' + value.package+ '@'+value.distro + ' | bash';
-                console.log(value);
+                input.value = 'curl https://lazy.build/' + distro.package+ '@'+distro.distro + ':' + version+ ' | bash';
+                console.log(version, distro);
                 // 2) Select the text
                 input.focus();
                 input.select();
@@ -30,9 +31,8 @@
                 wasCopied()
             }
 
-            async function fetchPreview(version, closure) {
-                const { data } = await axios.get('/' + version.package + '@' + version.distro)
-
+            async function fetchPreview({ version, distro }, closure) {
+                const { data } = await axios.get('/' + distro.package + '@' + distro.distro + ':' + version)
 
                 console.log(data);
                 closure(data);
@@ -52,24 +52,31 @@
                 </div>
                 <!-- This example requires Tailwind CSS v2.0+ -->
                 <ul role="list" class="w-full flex flex-wrap gap-4 dark:text-gray-200">
-                    <template x-for="(pkg, index) in packages">
+                    <template x-for="(pkg, pkgName) in packages">
                         <li class="w-full flex flex-col gap-2">
-                            <h2 class="text-2xl text-gray-800 dark:text-gray-300" x-text="index"></h2>
+                            <h2 class="text-2xl text-gray-800 dark:text-gray-300" x-text="pkgName"></h2>
                             <div class="w-full grid grid-cols-1 lg:grid-cols-3 gap-4">
-                                <template x-for="version in pkg">
-                                    <div class="bg-white dark:bg-gray-800 rounded-lg shadow divide-y divide-gray-200">
+                                <template x-for="(distro, distroName) in pkg">
+                                    <div x-data="{ version: distro[0].script }" class="bg-white dark:bg-gray-800 rounded-lg shadow divide-y divide-gray-200">
                                         <div class="w-full flex items-center justify-between p-6 space-x-6">
+                                            <img class="w-10 h-10 flex-shrink-0" x-bind:src="distro[0].logo" alt="">
                                             <div class="flex-1 truncate">
                                                 <div class="flex items-center space-x-3">
-                                                    <h3 class="text-gray-900 dark:text-gray-200 text-sm font-medium truncate" x-text="version.package"></h3>
+                                                    <h3 class="text-gray-900 dark:text-gray-200 text-sm font-medium truncate" x-text="pkgName"></h3>
                                                 </div>
-                                                <p class="mt-1 text-gray-500 dark:text-gray-400 text-sm truncate" x-text="version.distro"></p>
+                                                <p class="mt-1 text-gray-500 dark:text-gray-400 text-sm truncate" x-text="distroName"></p>
                                             </div>
-                                            <img class="w-10 h-10 flex-shrink-0" x-bind:src="version.logo" alt="">
+                                            <div class="flex-1 flex justify-end items-center">
+                                                <select x-model="version" class="ml-auto w-20 text-xs m-0 py-2 pr-6 pl-2 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:bg-gray-200 rounded-lg">
+                                                    <template x-for="script in distro">
+                                                        <option x-bind:value="script.script" x-text="script.script"></option>
+                                                    </template>
+                                                </select>
+                                            </div>
                                         </div>
                                         <div class="-mt-px flex divide-x divide-gray-200">
                                             <div class="w-0 flex-1 flex" x-data="{ wasCopied: false }">
-                                                <button x-on:click="handler(version, () => { wasCopied = true; setTimeout(() => wasCopied = false, 2000) })" class="relative -mr-px w-0 flex-1 inline-flex items-center justify-center py-4 text-sm text-gray-700 dark:text-gray-300 font-medium border border-transparent rounded-bl-lg hover:text-gray-500">
+                                                <button x-on:click="handler({ version, distro: distro.filter(d => d.script === version)[0] }, () => { wasCopied = true; setTimeout(() => wasCopied = false, 2000) })" class="relative -mr-px w-0 flex-1 inline-flex items-center justify-center py-4 text-sm text-gray-700 dark:text-gray-300 font-medium border border-transparent rounded-bl-lg hover:text-gray-500">
                                                     <svg x-show="!wasCopied" class="w-6 h-6 text-base" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
                                                     <span x-show="!wasCopied"  class="ml-3">Copy</span>
                                                     <svg x-show="wasCopied" class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
@@ -77,7 +84,7 @@
                                                 </button>
                                             </div>
                                             <div class="-ml-px w-0 flex-1 flex">
-                                                <button x-on:click="() => fetchPreview(version, (data) => { contents = data; showModal = true; } )" class="relative w-0 flex-1 inline-flex items-center justify-center py-4 text-sm text-gray-700 dark:text-gray-300 font-medium border border-transparent rounded-br-lg hover:text-gray-500">
+                                                <button x-on:click="() => fetchPreview({ version, distro: distro.filter(d => d.script === version)[0] }, (data) => { contents = data; showModal = true; } )" class="relative w-0 flex-1 inline-flex items-center justify-center py-4 text-sm text-gray-700 dark:text-gray-300 font-medium border border-transparent rounded-br-lg hover:text-gray-500">
                                                     <!-- Heroicon name: solid/phone -->
                                                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
                                                     <span class="ml-3">Preview</span>
