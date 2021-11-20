@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Process\Process;
 
 class GithubWebhooksController extends Controller
 {
-    public function __invoke(Request $request)
+    public function __invoke()
     {
         $expectedSignature = 'sha256='.hash_hmac('sha256', Request::getContent(), env('WEBHOOK_SECRET'));
         abort_unless($expectedSignature === request()->header('X-Hub-Signature-256'), 404);
