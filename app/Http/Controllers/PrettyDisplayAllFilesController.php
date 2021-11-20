@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Symfony\Component\Finder\SplFileInfo;
 
 class PrettyDisplayAllFilesController extends Controller
