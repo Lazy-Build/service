@@ -20,7 +20,12 @@ class PrettyDisplayAllFilesController extends Controller
         $files = cache()->tags(['file'])->rememberForever('all-files', function () {
             $filesystem = (new Filesystem);
             return collect($filesystem->allFiles(resource_path('scripts')))
-                ->filter(fn (SplFileInfo $file) => Str::endsWith($file->getBasename(), '.sh'))
+                ->filter(fn (SplFileInfo $file) => !in_array($file->getBasename(), [
+                    '.gitignore',
+                    'LICENSE',
+                    'README.md',
+                    'logo.svg',
+                ]))
                 ->mapToGroups(function (SplFileInfo $file) {
                     $filePath = str_replace(resource_path('scripts/'), '', $file->getPath().'/'.$file->getBasename());
                     [$package, $distro, $script] = explode('/', $filePath);
@@ -33,6 +38,8 @@ class PrettyDisplayAllFilesController extends Controller
                             'logo' => '/' . $package.'/logo.svg',
                         ]
                     ];
+                })->map(function ($packageGroup) {
+                    return collect($packageGroup)->groupBy('distro')->toArray();
                 });
         });
 
