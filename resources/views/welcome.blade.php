@@ -40,7 +40,7 @@
 
         </script>
     </head>
-    <body class="antialiased">
+    <body class="antialiased my-8">
         <div x-data="{ 'showModal': false, contents: null, packages: {{$files}} }" @keydown.escape="showModal = false" class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 dark:text-white sm:items-center py-4 sm:pt-0">
             <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
                 <div class="font-mono">
