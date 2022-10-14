@@ -51,7 +51,7 @@
                     Clicking "copy" will copy the install command using curl to your clip board. Clicking preview will open a modal to display the script's contents.
                 </div>
                 
-                <div class="font-mono mt-4">
+                <div class="font-mono mt-4 mb-2">
                     If you're curious and would like to contribute, [this whole project](https://github.com/lazy-build/service) is open source [including the scripts](https://github.com/Lazy-Build/scripts). Contributions are always welcome, and multiple versions are not needed, but also welcome!
                 </div>
                 <!-- This example requires Tailwind CSS v2.0+ -->
