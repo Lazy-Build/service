@@ -42,7 +42,7 @@
     </head>
     <body class="antialiased">
         <div x-data="{ 'showModal': false, contents: null, packages: {{$files}} }" @keydown.escape="showModal = false" class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 dark:text-white sm:items-center py-4 sm:pt-0">
-            <div class="max-w-6xl mx-auto sm:px-6 lg:px-8 py-8 sm:py-4">
+            <div class="max-w-6xl mx-auto sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
                 <div class="font-mono">
                     Greetings! This site exists because ultimately I'm lazy and install things on VMS too often. Feel free to use this as well.
                     The url scheme is https://lazy.build/&lt;package>@&lt;distro:&lt;script>
