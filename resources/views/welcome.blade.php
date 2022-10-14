@@ -53,8 +53,8 @@
                 
                 <div class="font-mono mt-4 mb-2">
                     If you're curious and would like to contribute, 
-                    <a href="https://github.com/lazy-build/service">this whole</a> project is open source
-                    <a href="https://github.com/Lazy-Build/scripts">including the scripts</a>. 
+                    <a class="underline" href="https://github.com/lazy-build/service">this whole</a> project is open source
+                    <a class="underline" href="https://github.com/Lazy-Build/scripts">including the scripts</a>. 
                     Contributions are always welcome, and multiple versions are not needed, but also welcome!
                 </div>
                 <!-- This example requires Tailwind CSS v2.0+ -->
