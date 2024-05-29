@@ -14,7 +14,7 @@ class GithubWebhooksController extends Controller
 
         $updateSubmodules = new Process(['git', 'pull', '--ff', '--commit'], resource_path('scripts'));
         $updateSubmodules->run();
-        cache()->tags(['file'])->flush();
+        cache()->flush();
         return 'OK';
     }
 }
