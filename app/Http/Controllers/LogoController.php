@@ -16,9 +16,9 @@ class LogoController extends Controller
     public function __invoke(Request $request, $package)
     {
         return cache()
-            ->tags(['file', 'logo'])
-            ->rememberForever(
+            ->remember(
                 $package.'.logo.svg',
+                now()->addHour(),
                 fn() => response(Storage::disk('scripts')->get(sprintf('%s/logo.svg', $package)), 200, [
                     'content-type' => 'image/svg+xml'
                 ])

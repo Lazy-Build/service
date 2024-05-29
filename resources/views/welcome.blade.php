@@ -6,9 +6,7 @@
 
         <title>Lazy build</title>
 
-        <link rel="stylesheet" href="{{ mix('/css/app.css') }}">
-
-        <script defer src="{{ mix('/js/app.js') }}"></script>
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
         <script>
             function handler({ version, distro }, wasCopied) {
                 console.log(arguments)
@@ -50,11 +48,11 @@
                 <div class="font-mono mt-4 mb-2">
                     Clicking "copy" will copy the install command using curl to your clip board. Clicking preview will open a modal to display the script's contents.
                 </div>
-                
+
                 <div class="font-mono mt-4 mb-2">
-                    If you're curious and would like to contribute, 
+                    If you're curious and would like to contribute,
                     <a class="underline" href="https://github.com/lazy-build/service">this whole</a> project is open source
-                    <a class="underline" href="https://github.com/Lazy-Build/scripts">including the scripts</a>. 
+                    <a class="underline" href="https://github.com/Lazy-Build/scripts">including the scripts</a>.
                     Contributions are always welcome, and multiple versions are not needed, but also welcome!
                 </div>
                 <!-- This example requires Tailwind CSS v2.0+ -->
@@ -65,6 +63,7 @@
                             <div class="w-full grid grid-cols-1 lg:grid-cols-3 gap-4">
                                 <template x-for="(distro, distroName) in pkg">
                                     <div x-data="{ version: distro[0].script }" class="bg-white dark:bg-gray-800 rounded-lg shadow divide-y divide-gray-200">
+                                        <pre></pre>
                                         <div class="w-full flex items-center justify-between p-6 space-x-6">
                                             <img class="w-10 h-10 flex-shrink-0" x-bind:src="distro[0].logo" alt="">
                                             <div class="flex-1 truncate">
@@ -74,9 +73,9 @@
                                                 <p class="mt-1 text-gray-500 dark:text-gray-400 text-sm truncate" x-text="distroName"></p>
                                             </div>
                                             <div class="flex-1 flex justify-end items-center">
-                                                <select x-model="version" class="ml-auto w-20 text-xs m-0 py-2 pr-6 pl-2 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:bg-gray-200 rounded-lg">
+                                                <select x-model="version" class="ml-auto w-20 text-xs m-0 py-2 pr-6 pl-2 bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-white rounded-lg">
                                                     <template x-for="script in distro">
-                                                        <option x-bind:value="script.script" x-text="script.script"></option>
+                                                        <option :value="script.script" x-text="script.script"></option>
                                                     </template>
                                                 </select>
                                             </div>
@@ -107,8 +106,8 @@
                 </ul>
 
                 <div class="overflow-auto" x-show="showModal" :class="{ 'fixed h-screen inset-0 z-10 flex items-center justify-center': showModal }">
-                    <button x-show="showModal" class="bg-gray-600 opacity-75 absolute h-screen w-full inset-0 z-0 flex items-center justify-center" @click="showModal=false"></button>
-                    <div class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:bg-gray-200 align-bottom rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full sm:p-6">
+                    <button x-show="showModal" class="bg-gray-950 opacity-75 absolute h-screen w-full inset-0 z-0 flex items-center justify-center" @click="showModal=false"></button>
+                    <div class="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-50 dark:bg-gray-200 align-bottom rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-4xl sm:w-full sm:p-6">
                         <code><pre x-text="contents"></pre></code>
                     </div>
                 </div>

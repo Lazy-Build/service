@@ -1,3 +1,0 @@
-[submodule "resources/scripts"]
-	path = resources/scripts
-	url = git@github.com:Lazy-Build/scripts.git
